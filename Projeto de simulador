@@ -1,0 +1,119 @@
+PAGINA HTML
+
+<template >
+    
+   <!-- <lightning-card  >-->
+        <div class="fundo">
+        <div class="slds-m-around_medium" >
+            <h1 class="slds-text-heading_large">Simulador de Energia Eólica</h1>
+            <p class="fonte">Preencha as informações</p>
+           
+            <lightning-input label ='Velocidade do vento' id="ventos" name="velVento"  type="float" onchange={pegaDados} class="slds-m-around_medium" > </lightning-input>
+            <lightning-input label ='Tempo de uso de energia em horas' id="temp" name="tempo" type="float" onchange={pegaDados} class="slds-m-around_medium"> </lightning-input>
+        
+        
+        <h2 class="fonte" > 
+            Consumo diario: {Resultado}  kWh/dia.</h2>
+      
+        </div>
+        <lightning-button variant="brand" label="calcular" title="Calcular consumo de Energia Eolica" onclick={calcular} class="slds-m-left_x-small"></lightning-button>
+
+    </div>
+
+       
+
+    <!-- lightning-card -->
+</template>
+
+___________________________________________________________________________________________
+//JS
+
+import { LightningElement, track} from 'lwc';
+
+export default class Simulador2 extends LightningElement {
+//campos a serem preenchidos no formulário
+    @track resultado;
+    @track Resultado;
+ dados={
+    tempo:'',
+    velVento:'',
+    diametro:15,
+    dens: 1.20,
+    coeficienteAero: 0.59,
+    eficiencia: 1.78
+
+    };
+//função de evento de preenchimento   
+
+    pegaDados(event){
+    //variavel temoraria de atribuição de valor ao campo deteminado
+    let name_ = event.target.name;
+    let value_ = parseFloat(event.target.value);
+    //pega os campos da função e atribui os valores
+    this.dados = {...this.dados, [name_]:value_ };
+    //visualização dos dados
+    console.log(this.dados)
+ 
+    }; 
+
+
+
+    calcular(){
+    //calculo da variavel Ar
+    let ar=(3.14*((this.dados.diametro*this.dados.diametro)/4));
+    console.log(ar);
+    //cubo da velocidade do vento
+    let cubo= (this.dados.velVento *this.dados.velVento*this.dados.velVento);
+    console.log(cubo);
+    //calculo da potecia da turbina eolica
+    let potencia= ((1/2)*(this.dados.dens*ar*this.dados.coeficienteAero*this.dados.eficiencia*cubo)); 
+    console.log(potencia);
+    //consumo de energia eolica diário pelo tempo em horas 
+    this.resultado = (this.dados.tempo*((potencia)/1000));
+    this.Resultado = this.resultado.toFixed(2);
+   
+    console.log(this.Resultado);
+    return this.Resultado;
+   
+    };
+   
+        
+    
+}
+
+________________________________________________________________________________________________________
+
+//CSS
+
+.fundo{
+    margin: 0 auto;
+    margin-top: 0px;
+    background: linear-gradient(to right, #259652, #41be73, #38ce74, #41be73, #259652) ;
+   
+}
+
+.fonte{
+    font-size: large;
+    color: #FDFDFD
+}
+h1{
+    color: #FDFDFD ;
+}
+________________________________________________________________________________________________________
+
+//META PROPRIO DO SALESORCE
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>54.0</apiVersion>
+    <isExposed>true</isExposed>
+
+        <targets>
+           <!-- <target>lightning__RecordPage</target>-->
+            <!-- <target>lightning__AppPage</target>-->
+           <target>lightning__HomePage</target>
+        </targets>
+
+</LightningComponentBundle>
+
+
+
